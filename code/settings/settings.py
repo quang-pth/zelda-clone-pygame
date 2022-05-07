@@ -47,6 +47,8 @@ weapon_data = {
     'sai': {'cooldown': 80, 'damage': 10, 'graphic': 'graphics/weapons/sai/full.png'},
 }
 
+
+
 # Magio
 magic_data = {
     'flame': {'strength': 5, 'cost': 20, 'graphic': 'graphics/particles/flame/fire.png'},
@@ -65,3 +67,4 @@ monster_data = {
     'bamboo': {'health': 70, 'exp': 120, 'damage': 14, 'attack_type': 'leaf_attack', 'attack_sound': 'audio/attack/slash.wav', 
             'speed': 3, 'resistance': 2, 'attack_radius': 50, 'notice_radius': 300},
 }
+
