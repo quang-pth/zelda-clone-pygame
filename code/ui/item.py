@@ -2,12 +2,18 @@ import pygame
 from settings.settings import *
 
 class Item:
+    """Lớp biểu diễn cho từng chỉ số nâng cấp được hiển thị trên màn hình.
+    Thông tin bao gồm: idx của chỉ số, font chữ, màu sắc,...
+    """
     def __init__(self, left, top, width, height, idx, font):
         self.rect = pygame.Rect(left, top, width, height)
         self.idx = idx
         self.font = font
     
     def display_name(self, surface, name, cost, selected):
+        """Hiển thị tên của chỉ số lên màn hình.
+        Màu chữ sẽ thay đổi theo nếu thông số đó đang được chọn.
+        """
         color = TEXT_COLOR_SELECTED if selected else TEXT_COLOR
 
         # Title
@@ -22,6 +28,7 @@ class Item:
         surface.blit(cost_surf, cost_rect)
 
     def display_bar(self, surface, value, max_value, selected):
+        """Hiển thị thanh bar đại diện cho mức nâng cấp hiện tại của mỗi thông số."""
         # setup
         top = self.rect.midtop + pygame.math.Vector2(0, 60)
         bottom = self.rect.midbottom + pygame.math.Vector2(0, -60)
@@ -34,6 +41,7 @@ class Item:
         pygame.draw.rect(surface, color, value_rect)
 
     def trigger(self, player):
+        """Nâng cấp chỉ số nếu thỏa điều kiện"""
         upgrade_attr = list(player.stats.keys())[self.idx]
         
         if player.exp >= player.upgrade_cost[upgrade_attr] and player.stats[upgrade_attr] < player.max_stats[upgrade_attr]:
@@ -47,6 +55,7 @@ class Item:
             player.upgrade_cost[upgrade_attr] *= 1.4
 
     def display(self, surface, selection_num, name, value, max_value, cost):
+        """Hiển thị thông số lên màn hình"""
         is_selected = self.idx == selection_num
 
         if is_selected:

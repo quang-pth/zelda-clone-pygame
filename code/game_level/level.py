@@ -1,7 +1,7 @@
 import sys
 import pygame
 from attack.magic import MagicPlayer
-from entity.player.animation_player import AnimationPlayer
+from entity.player.animation_player import Animation
 from entity.enemy.enemy import Enemy
 from utils.support import *
 from settings.settings import TILESIZE
@@ -48,8 +48,8 @@ class Level:
         self.upgrade = ItemUpgrade(self.player)
 
         # Particles
-        self.animation_player = AnimationPlayer()
-        self.magic_player = MagicPlayer(self.animation_player)
+        self.animation = Animation()
+        self.magic_player = MagicPlayer(self.animation)
 
         # Monster killing history
         self.number_monster_killed = {'squid': 0, 'raccoon': 0, 'spirit': 0, 'bamboo': 0}
@@ -174,8 +174,8 @@ class Level:
                     if sprite_type == 'grass':
                         pos = target_sprite.rect.center
                         offset = pygame.math.Vector2(0, 44)
-                        for leaf in range(randint(3, 6)):
-                            self.animation_player.create_grass_particles(pos - offset, [self.visible_sprites])
+                        for _ in range(randint(3, 6)):
+                            self.animation.create_grass_particles(pos - offset, [self.visible_sprites])
                         target_sprite.kill()
                     else:
                         target_sprite.get_damage(self.player, attack_sprite.sprite_type)
@@ -187,11 +187,11 @@ class Level:
         self.player.health = remains_health if remains_health > 0 else 0
         self.player.vulnerable = False
         self.player.get_hurt_time = pygame.time.get_ticks()
-        self.animation_player.create_particles(attack_type, self.player.rect.center, [self.visible_sprites])
+        self.animation.create_particles(attack_type, self.player.rect.center, [self.visible_sprites])
 
     def trigger_death_particle(self, pos, particle_type):
         """Tạo hiệu ứng trước khi chết của các quái vật"""
-        self.animation_player.create_particles(particle_type, pos, [self.visible_sprites])
+        self.animation.create_particles(particle_type, pos, [self.visible_sprites])
 
     def add_exp(self, amount):
         """Cộng kinh nghiệm cho người chơi"""
@@ -206,6 +206,7 @@ class Level:
         self.ui.display(self.player)
         self.ui.display_player_record(self.number_monster_killed)
         self.ui.display_game_turn(self.game_turn)
+        self.ui.show_exp(self.player.exp)
 
     def run(self):
         """Theo dõi và cập nhật các sự kiện diễn ra trong vòng lặp của game"""

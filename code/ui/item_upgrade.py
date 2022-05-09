@@ -3,6 +3,9 @@ from settings.settings import *
 from ui.item import Item
 
 class ItemUpgrade:
+    """Lớp biểu diễn cho các chỉ số cơ bản có thể nâng cấp được của người chơi.
+    Bao gồm: máu, thể lực, lực tấn công, sức mạnh pháp thuật và tốc độ.
+    """
     def __init__(self, player):        
         self.display_surf = pygame.display.get_surface()
         self.player = player
@@ -21,6 +24,7 @@ class ItemUpgrade:
         self.disable_duration = 199
 
     def input(self):
+        """Nhận input để di chuyển đến chỉ số cần nâng cấp"""
         keys = pygame.key.get_pressed()
         if self.can_move:
             if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
@@ -34,6 +38,7 @@ class ItemUpgrade:
                 self.item_list[self.selection_idx].trigger(self.player)
     
     def move_indicator(self, direction):
+        """Di chuyển dấu chỉ thị trên menu nâng cấp"""
         if direction == 'right':
             self.selection_idx += 1
             if self.selection_idx >= self.attribute_nr:
@@ -47,7 +52,8 @@ class ItemUpgrade:
             self.can_move = False
             self.selection_time = pygame.time.get_ticks()
 
-    def create_items(self): 
+    def create_items(self):
+        """Khởi tạo menu nâng cấp chỉ số"""
         self.item_list = []
 
         for idx, item in enumerate(range(self.attribute_nr)):
@@ -64,12 +70,14 @@ class ItemUpgrade:
             self.item_list.append(item)
 
     def selection_cooldown(self):
+        """Cài đặt khoảng thời gian nghỉ giữa những lần di chuyển trên menu"""
         if not self.can_move:
             current_time = pygame.time.get_ticks()
             if current_time - self.selection_time >= self.disable_duration:
                 self.can_move = True
 
     def display(self):
+        """Hiển thị menu lên màn hình"""
         self.input()
         self.selection_cooldown()
         # Draw all items

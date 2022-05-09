@@ -2,6 +2,7 @@ import pygame
 from math import sin
 
 class Entity(pygame.sprite.Sprite):
+    """Lớp chung cho lớp Player và Enemy (hay các thực thể trong game)"""
     def __init__(self, groups):
         super().__init__(groups)
         self.frame_idx = 0
@@ -9,6 +10,7 @@ class Entity(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2()
 
     def move(self, speed):
+        """Di chuyển thực thể dựa trên tốc độ"""
         # Ensuring player move with the same speed for all directions
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
@@ -20,6 +22,7 @@ class Entity(pygame.sprite.Sprite):
         self.rect.center = self.hitbox.center
 
     def collision(self, direction):
+        """Tính hitbox để gây sát thương dựa trên hướng di chuyển của thực thể"""
         if direction == 'horizontal':
             for sprite in self.obstacle_sprites:
                 if sprite.hitbox.colliderect(self.hitbox):
@@ -37,6 +40,7 @@ class Entity(pygame.sprite.Sprite):
                         self.hitbox.top = sprite.hitbox.bottom
 
     def wave_value(self):
+        """Lấy giá trị alpha để chạy hiệu ứng miễn giảm sát thương"""
         value = sin(pygame.time.get_ticks())
         if value >= 0: return 255
         else: return 0

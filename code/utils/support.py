@@ -3,6 +3,7 @@ from os import walk
 import pygame
 
 def import_csv_file(path):
+    """Lấy thông tin trong file csv, trả về ở dạng ma trận"""
     terrain_map = []
     with open(path) as level_map:
         layout = reader(level_map, delimiter = ',')
@@ -11,6 +12,7 @@ def import_csv_file(path):
         return terrain_map
 
 def import_files(path):
+    """Lấy ảnh từ file, trả về các ảnh ở dạng list"""
     surface_list = []
     # Extract file path, subfolder path and subfile path
     for _, __, img_files in walk(path):

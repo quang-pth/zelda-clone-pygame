@@ -2,6 +2,8 @@ import pygame
 from settings.settings import *
 
 class MagicPlayer:
+    """Lớp chứa thông tin về các đòn tấn công bằng phép thuật.
+    Có 2 loại phép thuật: hồi máu và chưởng lửa"""
     def __init__(self, animation_player):
         self.animation_player = animation_player
         self.sounds = {
@@ -10,6 +12,8 @@ class MagicPlayer:
         }
     
     def heal(self, player, strength, cost, groups):
+        """Sử dụng phép hồi máu. 
+        Hồi máu cho người chơi và tạo hiệu ứng hồi máu"""
         if player.energy < cost: return        
         
         self.sounds.get('heal').play()
@@ -27,6 +31,8 @@ class MagicPlayer:
         self.animation_player.create_particles('heal', player.rect.center + offset, groups)
 
     def flame(self, player, cost, groups):
+        """Sử dụng phép chưởng lửa. 
+        Tấn công, đẩy lùi mục tiêu và tạo hiệu ứng lửa"""
         if player.energy < cost: return
 
         self.sounds.get('flame').play()

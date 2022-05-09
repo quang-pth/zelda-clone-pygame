@@ -1,6 +1,8 @@
 import pygame
 
 class Weapon(pygame.sprite.Sprite):
+    """Lớp chứa thông tin về các đòn tấn công vật lí của người chơi.
+    Có 4 loại vũ khí: axe, lance, rapier, sai và sword."""
     def __init__(self, player, groups):
         super().__init__(groups)
         self.sprite_type = 'weapon'

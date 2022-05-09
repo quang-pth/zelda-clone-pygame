@@ -3,9 +3,13 @@ from random import choice
 from particle_effect.particle import ParticleEffect
 import pygame
 
-class AnimationPlayer:
-    def __init__(self):
-        self.frames = {
+class Animation:
+	"""Lớp xử lí các hoạt ảnh cho game.
+	Các hoạt ảnh bao gồm: hoạt ảnh di chuyển của người chơi, yêu quái, hiệu ứng pháp thuật,...
+	"""
+	
+	def __init__(self):
+		self.frames = {
 			# magic
 			'flame': import_files('graphics/particles/flame/frames'),
 			'aura': import_files('graphics/particles/aura'),
@@ -40,18 +44,21 @@ class AnimationPlayer:
 				self.reflect_images(import_files('graphics/particles/leaf6'))
             )
         }
-
-    def reflect_images(self, frames):
-        new_frames = []
-        for frame in frames:
-            flipped_frame = pygame.transform.flip(frame, True, False)
-            new_frames.append(flipped_frame)
-        return new_frames
-
-    def create_grass_particles(self, pos, groups):
-        animation_frames = choice(self.frames['leaf'])
-        ParticleEffect(pos, animation_frames, groups)
-    
-    def create_particles(self, animation_type, pos, groups):
-        animation_frames = self.frames.get(animation_type)
-        ParticleEffect(pos, animation_frames, groups)
+	
+	def reflect_images(self, frames):
+		"""Lật ảnh"""
+		new_frames = []
+		for frame in frames:
+			flipped_frame = pygame.transform.flip(frame, True, False)
+			new_frames.append(flipped_frame)
+		return new_frames
+	
+	def create_grass_particles(self, pos, groups):
+		"""Tạo hiệu ứng của cỏ"""
+		animation_frames = choice(self.frames['leaf'])
+		ParticleEffect(pos, animation_frames, groups)
+	
+	def create_particles(self, animation_type, pos, groups):
+		"""Tạo hiệu ứng tương ứng với animation_type"""
+		animation_frames = self.frames.get(animation_type)
+		ParticleEffect(pos, animation_frames, groups)

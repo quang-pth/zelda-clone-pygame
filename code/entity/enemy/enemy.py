@@ -5,6 +5,8 @@ from utils.support import import_files
 from random import choice
 
 class Enemy(Entity):
+    """Lớp chung cho các loại quái vật trên bản đồ.
+    Có 4 loại quái vật: bamboo, raccoon, spirit và squid. """
     def __init__(self, monster_name, pos, groups, obstacle_sprites, damage_player, trigger_death_particles, add_exp, update_player_record, game_turn = 1):
         super().__init__(groups)
         self.sprite_type = 'enemy'
@@ -25,6 +27,7 @@ class Enemy(Entity):
         self.init_sfx()
 
     def init_player_interaction_stats(self, damage_player, trigger_death_particles, add_exp):
+        """Khởi tạo các chỉ số liên quan đến việc tương tác với người chơi"""
         self.can_atttack = True
         self.attack_time = None
         self.attack_cooldown = 1134
@@ -35,6 +38,7 @@ class Enemy(Entity):
         self.run_away = False
 
     def init_sfx(self):
+        """Khởi tạo chỉ số về hiệu ứng âm thanh"""
         self.death_sound = pygame.mixer.Sound('audio/death.wav')
         self.hit_sound = pygame.mixer.Sound('audio/hit.wav')
         self.attack_sounnd = pygame.mixer.Sound(self.monster_info.get('attack_sound'))
@@ -43,11 +47,13 @@ class Enemy(Entity):
         self.attack_sounnd.set_volume(0.7)
 
     def init_get_damage_timer(self):
+        """Khởi tạo chỉ số về thời gian có thể miễn giảm sát thương nhận vào"""
         self.vulnerable = True
         self.get_hit_time = None
         self.invincibility_duration = 450
 
     def import_graphics(self, name):
+        """Lấy các hoạt ảnh chuyển động của yêu quái"""
         animations = {'idle': [], 'move': [], 'attack': []}
         main_path = f'graphics/monsters/{name}/'
         for animation in animations.keys():
@@ -55,12 +61,14 @@ class Enemy(Entity):
         return animations
 
     def generate_sprite(self, name, pos, inflate_info = [(20, -30), (0, -10)]):
+        """Khởi tạo yêu quái thành một sprite trong game"""
         image = self.animations.get(self.status)[self.frame_idx]
         rect = image.get_rect(topleft = pos)
         hitbox = rect.inflate(inflate_info[0]) if name == 'raccoon' else rect.inflate(inflate_info[1])
         return [image, rect, hitbox]
     
     def generatate_basic_stats(self, name, game_turn):
+        """Tạo các chỉ số cơ bản của yêu quái như tên, lượng máu, kinh nghiệm, tốc độ di chuyển,..."""
         # Monster get stronger after every new turn
         bonus_factor = 0.558 * pow(game_turn - 1, 2) + 0.358 * (game_turn - 1) + self.bonus 
 
@@ -76,6 +84,7 @@ class Enemy(Entity):
         self.attack_type = self.monster_info.get('attack_type')
 
     def get_player_distance_direction(self, player):
+        """Trả về khoảng cách và hướng để đi từ yêu quái đến người chơi"""
         enemy_vec = pygame.math.Vector2(self.rect.center)
         player_vec = pygame.math.Vector2(player.rect.center)
         distance = (player_vec - enemy_vec).magnitude()
@@ -83,6 +92,7 @@ class Enemy(Entity):
         return {'distance': distance, 'direction': direction}
 
     def get_status(self, player):
+        """Lấy thông trạng thái hiện tại của yêu quái"""
         distance = self.get_player_distance_direction(player).get('distance')
 
         if distance <= self.attack_radius and self.can_atttack:
@@ -95,6 +105,7 @@ class Enemy(Entity):
             self.status = 'idle'
 
     def action(self, player):
+        """Thực hiện các hành động dựa trên trạng thái hiện tại của yêu quái"""
         if self.status == 'attack':
             self.attack_time = pygame.time.get_ticks() if not self.attack_time else self.attack_time
             self.damage_player(self.attack_damage, self.attack_type)
@@ -105,6 +116,7 @@ class Enemy(Entity):
             self.direction = pygame.math.Vector2()
 
     def check_cooldowns(self):
+        """Kiểm tra thời gian hồi của các chỉ số"""
         current_time = pygame.time.get_ticks()
 
         if not self.can_atttack: 
@@ -118,6 +130,7 @@ class Enemy(Entity):
                 self.get_hit_time = None
 
     def animate(self):
+        """Chạy hoạt ảnh của yêu quái dựa trên trạng thái"""
         animations = self.animations[self.status]
         self.frame_idx += self.animation_speed
         if self.frame_idx >= len(animations): 
@@ -135,6 +148,7 @@ class Enemy(Entity):
             self.image.set_alpha(255)
 
     def get_damage(self, player, attack_type):
+        """Trừ máu của yêu quái nếu nhận phải sát thương từ người chơi"""
         if not self.vulnerable: return
         # Forwarding enemies direction to player after had been pushed back by Player Attack
         self.direction = self.set_random_run_away_direction(player)
@@ -147,6 +161,7 @@ class Enemy(Entity):
         self.hit_sound.play()
 
     def set_random_run_away_direction(self, player):
+        """Xét hướng chạy ngẫu nhiên cho yêu quái nếu bị tấn công"""
         run_direction = self.get_player_distance_direction(player).get('direction')
         if not self.run_away:
             run_away_prob = ['r', 'nr', 'r', 'nr', 'nr']
@@ -157,6 +172,7 @@ class Enemy(Entity):
         return run_direction
 
     def check_death(self):
+        """Kiểm tra nếu yêu quái đã chết hay chưa. Và chạy hoạt ảnh 'chết' nếu đã chết"""
         if self.health <= 0:
             self.trigger_death_particles(self.rect.center, self.monster_name)
             self.kill()
@@ -165,6 +181,7 @@ class Enemy(Entity):
             self.update_player_record(self.monster_name)
             
     def get_hit_reaction(self):
+        """Giật yêu quái lùi theo hướng ngược lại với hướng di chuyển nếu bị tấn công"""
         if not self.vulnerable:
             self.direction *= -self.resistance
     
@@ -176,5 +193,6 @@ class Enemy(Entity):
         self.check_death()
 
     def enemy_update(self, player):
+        """Hàm cập nhật yêu quái tùy chỉnh"""
         self.get_status(player)
         self.action(player)
