@@ -46,7 +46,10 @@ class Animation:
         }
 	
 	def reflect_images(self, frames):
-		"""Lật ảnh"""
+		"""Lật ảnh
+        
+        (method) reflect_images(frames: list) -> list 
+        """
 		new_frames = []
 		for frame in frames:
 			flipped_frame = pygame.transform.flip(frame, True, False)
@@ -54,11 +57,17 @@ class Animation:
 		return new_frames
 	
 	def create_grass_particles(self, pos, groups):
-		"""Tạo hiệu ứng của cỏ"""
+		"""Tạo hiệu ứng của cỏ
+        
+        (method) create_grass_particles(pos: vec2, groups: list) -> None 
+        """
 		animation_frames = choice(self.frames['leaf'])
 		ParticleEffect(pos, animation_frames, groups)
 	
 	def create_particles(self, animation_type, pos, groups):
-		"""Tạo hiệu ứng tương ứng với animation_type"""
+		"""Tạo hiệu ứng tương ứng với animation_type
+        
+        (method) create_particles(animation_type: str, pos: vec2, groups: list) -> None 
+        """
 		animation_frames = self.frames.get(animation_type)
 		ParticleEffect(pos, animation_frames, groups)

@@ -14,7 +14,10 @@ class ParticleEffect(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center = pos)
     
     def animate(self):
-        """Khởi chạy hiệu ứng theo frame tương ứng"""
+        """Khởi chạy hiệu ứng theo frame tương ứng
+        
+        (method) animate() -> None
+        """
         self.frame_idx += self.animation_speed
         if self.frame_idx >= len(self.frames):
             self.kill()

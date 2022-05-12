@@ -33,7 +33,10 @@ class Player(Entity):
         self.weapon_attack_sound.set_volume(0.4)
     
     def init_attack_attr(self, create_attack, destroy_attack):
-        """Khởi tạo các chỉ số tấn công bằng vật lí"""
+        """Khởi tạo các chỉ số tấn công bằng vật lí
+        
+        (method) init_attack_attr(create_attack: function, destroy_attack: function) -> None
+        """
         # Attacking
         self.attacking = False
         self.base_cooldown = 400
@@ -51,7 +54,10 @@ class Player(Entity):
         self.weapon_switch_time = None
     
     def init_magic_attr(self, create_magic):
-        """Khởi tạo các chỉ số tấn công bằng phép thuật"""
+        """Khởi tạo các chỉ số tấn công bằng phép thuật
+        
+        (method) init_magic_attr(create_magic: function) -> None 
+        """
         self.create_magic = create_magic
         self.magic_idx = 0
         self.magics = list(magic_data.keys()) 
@@ -60,7 +66,10 @@ class Player(Entity):
         self.magic_switch_time = None
 
     def init_stats(self):
-        """Khởi tạo các chỉ số cơ bản như máu, kinh nghiệm, năng lượng, tốc độ,..."""
+        """Khởi tạo các chỉ số cơ bản như máu, kinh nghiệm, năng lượng, tốc độ,...
+        
+        (method) init_stats() -> None 
+        """
         self.stats = {'health': 100, 'energy': 60, 'attack': 10, 'magic': 4, 'speed': 6}
         self.max_stats = {'health': 300, 'energy': 140, 'attack': 20, 'magic': 10, 'speed': 10}
         self.upgrade_cost = {'health': 100, 'energy': 100, 'attack': 100, 'magic': 100, 'speed': 100}
@@ -70,7 +79,10 @@ class Player(Entity):
         self.exp = 0
 
     def import_player_assets(self):
-        """Lấy các hoạt ảnh của người chơi"""
+        """Lấy các hoạt ảnh của người chơi
+        
+        (method) import_player_assets() -> None 
+        """
         character_path = 'graphics/player'
         self.animations = {
             'up': [], 'down': [], 'left': [], 'right': [], 
@@ -84,7 +96,10 @@ class Player(Entity):
             self.animations[animation] = import_files(animation_full_path)
         
     def input(self):
-        """Xử lí input để thực hiện các hành động tương ứng như di chuyển, tấn công, nâng cấp chỉ số,..."""
+        """Xử lí input để thực hiện các hành động tương ứng như di chuyển, tấn công, nâng cấp chỉ số,...
+        
+        (method) input() -> None 
+        """
         keys = pygame.key.get_pressed()
         if not self.attacking:
             # Movement Input
@@ -146,8 +161,11 @@ class Player(Entity):
                     self.magic_idx = 0
                 self.using_magic = self.magics[self.magic_idx]
         
-    def get_status(self):
-        """Lấy trạng thái hiện tại của người chơi"""
+    def set_status(self):
+        """Lấy trạng thái hiện tại của người chơi
+        
+        (method) set_status() -> None
+        """
         # IDLE status
         if self.direction.x == 0 and self.direction.y == 0 and not self.attacking:
             if not 'idle' in self.status and not 'attack' in self.status: 
@@ -165,7 +183,10 @@ class Player(Entity):
             self.status = self.status.removesuffix("_attack")
 
     def cooldowns(self):
-        """Kiểm tra các thời gian hồi của các chỉ số phụ"""
+        """Kiểm tra các thời gian hồi của các chỉ số phụ
+        
+        (method) cooldowns() -> None 
+        """
         current_time = pygame.time.get_ticks()
         if self.attacking:
             if current_time - self.attack_time >= self.base_cooldown + self.weapon_cooldown:
@@ -182,7 +203,10 @@ class Player(Entity):
                 self.vulnerable = True
                 
     def animate(self):
-        """Chạy hoạt ảnh cho người chơi"""
+        """Chạy hoạt ảnh cho người chơi
+        
+        (method) animate() -> None 
+        """
         animation = self.animations[self.status]
         # Loop over the frame idx
         self.frame_idx += self.animation_speed
@@ -198,9 +222,12 @@ class Player(Entity):
         else:
             self.image.set_alpha(255)
     
-    def get_full_damage(self, type):
+    def calc_total_damage(self, type):
         """Tính lượng sát thương gây ra của người chơi dựa trên loại tấn công bằng
-        vật lí hay pháp thuật"""
+        vật lí hay pháp thuật
+        
+        (method) calc_total_damage(type: str) -> float  
+        """
         if type == 'weapon': # physical weapon
             base_damage = self.stats.get('attack')
             bonus_damage = weapon_data.get(self.using_weapon).get('damage')
@@ -210,7 +237,10 @@ class Player(Entity):
         return base_damage + bonus_damage
 
     def energy_recovery(self):
-        """Hồi một lượng năng lượng nhất định theo thời gian cho người chơi"""
+        """Hồi một lượng năng lượng nhất định theo thời gian cho người chơi
+        
+        (method) energy_recovery() -> None 
+        """
         energy_after_recover = self.energy + 0.0333 * self.stats.get('magic') 
         max_energy = self.stats.get('energy')
         if energy_after_recover < max_energy:
@@ -219,17 +249,23 @@ class Player(Entity):
             self.energy = max_energy
 
     def get_value_by_idx(self, idx):
-        """Lấy giá trị chỉ số"""
+        """Lấy giá trị chỉ số
+        
+        (method) get_value_by_idx(idx: int) -> int 
+        """
         return list(self.stats.values())[idx]
 
     def get_cost_by_idx(self, idx):
-        """Lấy giá nâng cấp chỉ số"""
+        """Lấy giá nâng cấp chỉ số
+        
+        (method) get_cost_by_idx(idx: int) -> int 
+        """
         return list(self.upgrade_cost.values())[idx]
 
     def update(self):
         self.input()
         self.move(self.stats.get('speed'))
-        self.get_status()
+        self.set_status()
         self.animate()
         self.cooldowns()
         self.energy_recovery()

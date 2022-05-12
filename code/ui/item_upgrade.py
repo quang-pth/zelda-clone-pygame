@@ -24,7 +24,10 @@ class ItemUpgrade:
         self.disable_duration = 199
 
     def input(self):
-        """Nhận input để di chuyển đến chỉ số cần nâng cấp"""
+        """Nhận input để di chuyển đến chỉ số cần nâng cấp
+        
+        (method) input() -> None
+        """
         keys = pygame.key.get_pressed()
         if self.can_move:
             if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
@@ -38,7 +41,10 @@ class ItemUpgrade:
                 self.item_list[self.selection_idx].trigger(self.player)
     
     def move_indicator(self, direction):
-        """Di chuyển dấu chỉ thị trên menu nâng cấp"""
+        """Di chuyển dấu chỉ thị trên menu nâng cấp
+        
+        (method) move_indicator(direction: str) -> None
+        """
         if direction == 'right':
             self.selection_idx += 1
             if self.selection_idx >= self.attribute_nr:
@@ -53,7 +59,10 @@ class ItemUpgrade:
             self.selection_time = pygame.time.get_ticks()
 
     def create_items(self):
-        """Khởi tạo menu nâng cấp chỉ số"""
+        """Khởi tạo menu nâng cấp chỉ số
+        
+        (method) create_items() -> None
+        """
         self.item_list = []
 
         for idx, item in enumerate(range(self.attribute_nr)):
@@ -70,14 +79,20 @@ class ItemUpgrade:
             self.item_list.append(item)
 
     def selection_cooldown(self):
-        """Cài đặt khoảng thời gian nghỉ giữa những lần di chuyển trên menu"""
+        """Cài đặt khoảng thời gian nghỉ giữa những lần di chuyển trên menu
+        
+        (method) selection_cooldown() -> None 
+        """
         if not self.can_move:
             current_time = pygame.time.get_ticks()
             if current_time - self.selection_time >= self.disable_duration:
                 self.can_move = True
 
     def display(self):
-        """Hiển thị menu lên màn hình"""
+        """Hiển thị menu lên màn hình
+        
+        (method) display() -> None 
+        """
         self.input()
         self.selection_cooldown()
         # Draw all items

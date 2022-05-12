@@ -55,12 +55,18 @@ class Level:
         self.number_monster_killed = {'squid': 0, 'raccoon': 0, 'spirit': 0, 'bamboo': 0}
 
     def update_player_record(self, monster_name):
-        """Cập nhật chỉ số quái vật đã tiêu diệt"""
+        """Cập nhật chỉ số quái vật đã tiêu diệt
+
+        (method) update_player_record: (monster_name: str) -> None
+        """
         self.number_monster_killed[monster_name] += 1
 
     def respawn_monster(self):
         """Sinh ra một đợt quái vật mới khi người chơi đã tiêu diệt toàn bộ
-        quái vật hiện có trên bản đồ"""
+        quái vật hiện có trên bản đồ
+        
+        (method) respawn_monster: () -> None
+        """
         self.game_turn += 1
 
         for _, monster_info in enumerate(self.total_monster):
@@ -83,6 +89,8 @@ class Level:
     def create_map(self):
         """ Khởi tạo bản đồ cho game. 
         Đối tượng khởi tạo bao gồm: biển, mặt đất, cỏ, cây, yêu quái, người chơi.
+
+        (method) create_map: () -> None
         """
         layouts = {
             'boundary': import_csv_file('map/map_FloorBlocks.csv'),
@@ -144,17 +152,26 @@ class Level:
                                 self.total_monster.append([monster_name, pos])
 
     def destroy_attack(self):
-        """Hủy đòn đánh của người chơi"""
+        """Hủy đòn đánh của người chơi
+        
+        (method) destroy_attack: () -> None
+        """
         if self.current_player_attack:
             self.current_player_attack.kill()
             self.current_player_attack = None
 
     def create_attack(self):
-        """Tạo vũ khí cho người chơi"""
+        """Tạo vũ khí cho người chơi
+        
+        (method) create_attack: () -> None
+        """
         self.current_player_attack = Weapon(self.player, [self.visible_sprites, self.attack_sprites])
 
     def create_magic(self, style, strength, cost):
-        """Tạo kĩ năng pháp thuật cho người chơi"""
+        """Tạo kĩ năng pháp thuật cho người chơi
+        
+        (method) create_magic: (style: str, strength: float, cost: float) -> None
+        """
         if style == 'heal':
             self.magic_player.heal(self.player, strength, cost, [self.visible_sprites])
         elif style == 'flame':
@@ -163,6 +180,8 @@ class Level:
     def player_attack_logic(self):
         """
             Khởi tạo đòn tấn công và gây sát thương cho yêu quái
+
+            (method) player_attack_logic: () -> None
         """
         if not self.attack_sprites: return
         for attack_sprite in self.attack_sprites:
@@ -181,7 +200,10 @@ class Level:
                         target_sprite.get_damage(self.player, attack_sprite.sprite_type)
 
     def damage_player(self, amount, attack_type):
-        """Giảm máu của người chơi nếu bị đánh trung và tạo hiệu ứng tương ứng"""
+        """Giảm máu của người chơi nếu bị đánh trung và tạo hiệu ứng tương ứng
+        
+        (method) damage_player: (amount: float, attack_type: str) -> None
+        """
         if not self.player.vulnerable: return
         remains_health = self.player.health - amount
         self.player.health = remains_health if remains_health > 0 else 0
@@ -190,26 +212,41 @@ class Level:
         self.animation.create_particles(attack_type, self.player.rect.center, [self.visible_sprites])
 
     def trigger_death_particle(self, pos, particle_type):
-        """Tạo hiệu ứng trước khi chết của các quái vật"""
+        """Tạo hiệu ứng trước khi chết của các quái vật
+        
+        (method) trigger_death_particle: (pos: vec2, particle_type: str) -> None
+        """
         self.animation.create_particles(particle_type, pos, [self.visible_sprites])
 
     def add_exp(self, amount):
-        """Cộng kinh nghiệm cho người chơi"""
+        """Cộng kinh nghiệm cho người chơi
+        
+        (method) add_exp: (amount: int) -> None
+        """
         self.player.exp += amount
 
     def toggle_menu(self):
-        """Điều chỉnh trạng thái dừng/tiếp tục của game"""
+        """Điều chỉnh trạng thái dừng/tiếp tục của game
+        
+        (method) toggle_menu: () -> None
+        """
         self.game_paused = not self.game_paused
 
     def dislay_ui(self):
-        """Hiển thị các thông tin của người chơi và màn chơi lên màn hình"""
+        """Hiển thị các thông tin của người chơi và màn chơi lên màn hình
+
+        (method) dislay_ui: () -> None
+        """
         self.ui.display(self.player)
         self.ui.display_player_record(self.number_monster_killed)
         self.ui.display_game_turn(self.game_turn)
         self.ui.show_exp(self.player.exp)
 
     def run(self):
-        """Theo dõi và cập nhật các sự kiện diễn ra trong vòng lặp của game"""
+        """Theo dõi và cập nhật các sự kiện diễn ra trong vòng lặp của game
+        
+        (method) run: () -> bool
+        """
         self.visible_sprites.custom_draw(self.player)
 
         if self.player.health <= 0:
@@ -239,7 +276,10 @@ class Level:
         return self.is_game_over
     
     def process_menu_options_input(self):
-        """Xử lí input trên menu trước khi bắt đầu game"""
+        """Xử lí input trên menu trước khi bắt đầu game
+
+        (method) process_menu_options_input: () -> None
+        """
         keys = pygame.key.get_pressed()
         # Press Q to start game
         if keys[pygame.K_q]:
@@ -250,7 +290,10 @@ class Level:
             sys.exit()
 
     def check_change_to_new_turn(self):
-        """Chuyển sang game sang vòng mới nếu đã hoàn thành màn chơi trước đó"""
+        """Chuyển sang game sang vòng mới nếu đã hoàn thành màn chơi trước đó
+        
+        (method) check_change_to_new_turn: () -> None
+        """
         enemies_killed = sum(self.number_monster_killed.values())
         if enemies_killed == 35 * self.game_turn:
             self.end_turn_time = pygame.time.get_ticks() if self.end_turn_time is None else self.end_turn_time 

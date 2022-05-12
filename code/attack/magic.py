@@ -13,7 +13,10 @@ class MagicPlayer:
     
     def heal(self, player, strength, cost, groups):
         """Sử dụng phép hồi máu. 
-        Hồi máu cho người chơi và tạo hiệu ứng hồi máu"""
+        Hồi máu cho người chơi và tạo hiệu ứng hồi máu.
+        
+        (method) heal(player: Player, strength: float, cost : float, groups: list) -> None
+        """
         if player.energy < cost: return        
         
         self.sounds.get('heal').play()
@@ -32,7 +35,10 @@ class MagicPlayer:
 
     def flame(self, player, cost, groups):
         """Sử dụng phép chưởng lửa. 
-        Tấn công, đẩy lùi mục tiêu và tạo hiệu ứng lửa"""
+        Tấn công, đẩy lùi mục tiêu và tạo hiệu ứng lửa
+        
+        (method) heal(player: Player, cost : float, groups: list) -> None
+        """
         if player.energy < cost: return
 
         self.sounds.get('flame').play()

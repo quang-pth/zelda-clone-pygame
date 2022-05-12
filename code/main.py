@@ -19,7 +19,10 @@ class Game:
 		self.game_is_over = False
 
 	def run(self):
-		"""Khởi chạy game và xử lí các input liên quan"""
+		"""Khởi chạy game và xử lí các input liên quan
+		
+		(method) run: () -> NoReturn
+		"""
 		while True:
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:

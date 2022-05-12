@@ -15,7 +15,10 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.floor_rect = self.floor_surface.get_rect(topleft = (0, 0))
 
     def custom_draw(self, player):
-        """Vẽ các object trong game theo thứ tự trên trục y."""
+        """Vẽ các object trong game theo thứ tự trên trục y.
+        
+        (method) custom_draw(player: Player) -> None 
+        """
         # Getting the offset
         self.offset.x = player.rect.centerx - self.half_width
         self.offset.y = player.rect.centery - self.half_height
@@ -29,7 +32,10 @@ class YSortCameraGroup(pygame.sprite.Group):
             self.display_surface.blit(sprite.image, offset_pos)
     
     def enemy_update(self, player):
-        """Cập nhật trạng thái các object có thể tấn công được cho người chơi."""
+        """Cập nhật trạng thái các object có thể tấn công được cho người chơi.
+        
+        (method) enemy_update(player: Player) -> None 
+        """
         enemy_sprites = [sprite for sprite in self.sprites() if (hasattr(sprite, 'sprite_type') and sprite.sprite_type == 'enemy')]
         for enemy in enemy_sprites:
             enemy.enemy_update(player)
